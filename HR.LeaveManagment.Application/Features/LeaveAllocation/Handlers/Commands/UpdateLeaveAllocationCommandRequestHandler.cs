@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace HR.LeaveManagment.Application.Features.LeaveAllocation.Handlers.Commands
 {
-    public class UpdateLeaveAllocationCommandRequestHandler:IRequestHandler<UpdateLeaveAllocationCommandRequest, Unit>
+    public class UpdateLeaveAllocationCommandRequestHandler:IRequestHandler<UpdateLeaveAllocationCommandRequest, int>
     {
         private readonly ILeaveAllocationRepository _LeaveAllocationRepository;
         private readonly IMapper _mapper;
@@ -25,7 +25,7 @@ namespace HR.LeaveManagment.Application.Features.LeaveAllocation.Handlers.Comman
             _mapper = mapper;
             _leaveTypeRepository = leaveTypeRepository;
         }
-        public async Task<Unit> Handle(UpdateLeaveAllocationCommandRequest request, CancellationToken cancellationToken)
+        public async Task<int> Handle(UpdateLeaveAllocationCommandRequest request, CancellationToken cancellationToken)
         {
             var validation = new UpdateLeaveAllocationDtoValidation(_leaveTypeRepository);
             var validationResult = validation.Validate(request.LeaveAllocationDto);
@@ -37,7 +37,7 @@ namespace HR.LeaveManagment.Application.Features.LeaveAllocation.Handlers.Comman
             var leaveallocation = await _LeaveAllocationRepository.Get(request.LeaveAllocationDto.Id);
             _mapper.Map(request.LeaveAllocationDto, leaveallocation);
             await _LeaveAllocationRepository.Update(leaveallocation);
-            return Unit.Value;
+            return 1;
 
         }
     

@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.14">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HR.LeaveManagment.Application\HR.LeaveManagment.Application.csproj" />
+    <ProjectReference Include="..\HR.LeaveManagment.Domain\HR.LeaveManagment.Domain.csproj" />
+    <ProjectReference Include="..\HR.LeaveManagment.Identity\HR.LeaveManagment.Identity.csproj" />
+    <ProjectReference Include="..\HR.LeaveManagment.Infrastrucure\HR.LeaveManagment.Infrastrucure.csproj" />
+    <ProjectReference Include="..\HR.LeaveManagment.Presistance\HR.LeaveManagment.Presistance.csproj" />
+  </ItemGroup>
+
+</Project>

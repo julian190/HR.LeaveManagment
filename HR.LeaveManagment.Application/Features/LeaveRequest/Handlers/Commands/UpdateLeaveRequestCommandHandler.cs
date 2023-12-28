@@ -7,7 +7,7 @@ using ValidationException = HR.LeaveManagment.Application.Exceptions.ValidationE
 
 namespace HR.LeaveManagment.Application.Features.LeaveRequest.Handlers.Commands
 {
-    public class UpdateLeaveRequestCommandHandler : IRequestHandler<UpdateLeaveRequestCommand, Unit>
+    public class UpdateLeaveRequestCommandHandler : IRequestHandler<UpdateLeaveRequestCommand, int>
     {
         private readonly ILeaveRequestRepository _leaveRequestRepository;
         private readonly IMapper _mapper;
@@ -19,7 +19,7 @@ namespace HR.LeaveManagment.Application.Features.LeaveRequest.Handlers.Commands
             _mapper = mapper;
             _leaveTypeRepository = leaveTypeRepository;
         }
-        public async Task<Unit> Handle(UpdateLeaveRequestCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(UpdateLeaveRequestCommand request, CancellationToken cancellationToken)
         {
             var LeaveRequest = await _leaveRequestRepository.GetLeaveRequestWithDetails(request.Id);
 
@@ -39,7 +39,7 @@ namespace HR.LeaveManagment.Application.Features.LeaveRequest.Handlers.Commands
                 await _leaveRequestRepository.ChangeApprovalStatus(LeaveRequest, request.ChangeLeaveRequestApprovalDto.Approved);
             }
 
-            return Unit.Value;  
+            return 1;  
         }
     }
 }
