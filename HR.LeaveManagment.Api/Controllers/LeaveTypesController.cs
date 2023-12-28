@@ -13,7 +13,8 @@ namespace HR.LeaveManagment.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    
+    [Authorize(Roles = "Administrator")]
+
     public class LeaveTypesController : Controller
     {
         private readonly IMediator _mediator;
@@ -24,7 +25,6 @@ namespace HR.LeaveManagment.Api.Controllers
 
         // GET: LeaveTypesController
         [HttpGet]
-        [Authorize]
         public async Task<ActionResult<List<LeaveTypeDto>>> Get()
         {
             var leaveTypes = await _mediator.Send(new GetLeaveTypeListRequest());
