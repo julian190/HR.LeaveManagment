@@ -1,7 +1,9 @@
 ﻿using HR.LeaveManagment.Application.DTOs.LeaveAllocation;
 using HR.LeaveManagment.Application.Features.LeaveAllocation.Requests.Commands;
 using HR.LeaveManagment.Application.Features.LeaveTypes.Requests.Queries;
+using HR.LeaveManagment.Application.Responses;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -10,6 +12,7 @@ namespace HR.LeaveManagment.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize("Administrator")]
     public class LeaveAllocationController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -37,10 +40,10 @@ namespace HR.LeaveManagment.Api.Controllers
 
         // POST api/<LeaveAllocationController>
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] CreateLeveAllocationDto LeaveAllocation)
+        public async Task<ActionResult<BaseCommandResponse>> Post([FromBody] CreateLeveAllocationDto LeaveAllocation)
         {
             var Result = await _mediator.Send(new CreateLeaveAllocationCommandRequest { LeaveAllocationDto = LeaveAllocation });
-            return NoContent();
+            return Ok(Result);
         }
 
         // PUT api/<LeaveAllocationController>/5
