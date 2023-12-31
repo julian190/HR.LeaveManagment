@@ -12,7 +12,7 @@ namespace HR.LeaveManagment.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize("Administrator")]
+    
     public class LeaveAllocationController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -42,7 +42,7 @@ namespace HR.LeaveManagment.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<BaseCommandResponse>> Post([FromBody] CreateLeveAllocationDto LeaveAllocation)
         {
-            var Result = await _mediator.Send(new CreateLeaveAllocationCommandRequest { LeaveAllocationDto = LeaveAllocation });
+            var Result = await _mediator.Send(new CreateLeaveAllocationCommandRequest { LeaveAllocationDto = LeaveAllocation },CancellationToken.None);
             return Ok(Result);
         }
 

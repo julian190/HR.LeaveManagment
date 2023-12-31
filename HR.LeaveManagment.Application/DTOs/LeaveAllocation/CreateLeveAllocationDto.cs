@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace HR.LeaveManagment.Application.DTOs.LeaveAllocation
 {
-    public class CreateLeveAllocationDto:ILeaveAllocationDto
+    public class CreateLeveAllocationDto
     {
-        public int NumberOfDays { get; set; }
+       
         public int LeaveTypeId { get; set; }
-        public int Period { get; set; }
+       
     }
 }

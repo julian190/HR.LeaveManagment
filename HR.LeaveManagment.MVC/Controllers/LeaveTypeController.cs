@@ -1,5 +1,6 @@
 ﻿using HR.LeaveManagment.MVC.Contracts;
 using HR.LeaveManagment.MVC.Models;
+using HR.LeaveManagment.MVC.Services;
 using HR.LeaveManagment.MVC.Services.Base;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -13,10 +14,13 @@ namespace HR.LeaveManagment.MVC.Controllers
     public class LeaveTypeController : Controller
     {
         private readonly ILeaveTypeService _leaveTypeService;
+        private readonly ILeaveAllocationService _leaveAllocationService;
 
-        public LeaveTypeController(ILeaveTypeService leaveTypeService)
+        public LeaveTypeController(ILeaveTypeService leaveTypeService, ILeaveAllocationService leaveAllocationService)
         {
             _leaveTypeService = leaveTypeService;
+            _leaveAllocationService = leaveAllocationService;
+
         }
         // GET: LeaveTypeController
         public async Task<ActionResult> Index()
@@ -111,6 +115,26 @@ namespace HR.LeaveManagment.MVC.Controllers
                 ModelState.AddModelError("", ex.Message);
 
             }
+            return BadRequest();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Allocate(int id)
+        {
+            try
+            {
+                var response = await _leaveAllocationService.CreateLeaveAllocations(id);
+                if (response.Sucess)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+            }
+
             return BadRequest();
         }
     }

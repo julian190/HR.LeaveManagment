@@ -29,7 +29,7 @@ namespace HR.LeaveManagment.Application.Features.LeaveAllocation.Handlers.Comman
         {
             BaseCommandResponse response = new();
             var createvalitor = new CreateLeaveAllocationDtoValidation(_leaveTypeRepository);
-            var validation = createvalitor.Validate(request.LeaveAllocationDto);
+            var validation = await createvalitor.ValidateAsync(request.LeaveAllocationDto);
             if(validation.IsValid == false)
             {
                 response.Success = false;

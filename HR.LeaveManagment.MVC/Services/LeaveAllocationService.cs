@@ -14,12 +14,12 @@ namespace HR.LeaveManagment.MVC.Services
             _storageServices = localstorage;
             _client = client;
         }
-        public async Task<Response<int>> CreateLeaveAllocations(int LeaveTypeId, int NumberOfDays)
+        public async Task<Response<int>> CreateLeaveAllocations(int LeaveTypeId)
         {
             try
             {
                 Response<int> response = new();
-                CreateLeveAllocationDto createLeveAllocation = new() { LeaveTypeId = LeaveTypeId, NumberOfDays = NumberOfDays, Period = DateTime.Now.Year };
+                CreateLeveAllocationDto createLeveAllocation = new() { LeaveTypeId = LeaveTypeId};
                 AddBearerTooken();
                 var apiResponse = await _client.LeaveAllocationPOSTAsync(createLeveAllocation);
                 if(apiResponse.Success)
