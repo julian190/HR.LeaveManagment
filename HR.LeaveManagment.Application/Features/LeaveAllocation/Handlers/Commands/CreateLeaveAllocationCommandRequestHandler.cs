@@ -13,22 +13,21 @@ namespace HR.LeaveManagment.Application.Features.LeaveAllocation.Handlers.Comman
 {
     public class CreateLeaveAllocationCommandRequestHandler : IRequestHandler<CreateLeaveAllocationCommandRequest, BaseCommandResponse>
     {
-        private readonly ILeaveAllocationRepository _leaveAllocationRepository;
+      //  private readonly ILeaveAllocationRepository _leaveAllocationRepository;
         private readonly IMapper _mapper;
-        private readonly ILeaveTypeRepository _leaveTypeRepository;
+        //private readonly ILeaveTypeRepository _leaveTypeRepository;
         private IUserService _userService;
-        public CreateLeaveAllocationCommandRequestHandler(ILeaveAllocationRepository leaveAllocationRepository 
-            , IMapper mapper,ILeaveTypeRepository leaveTypeRepository, IUserService userService)
+        private IUnitOfWork _unitOfWork;
+        public CreateLeaveAllocationCommandRequestHandler(IMapper mapper, IUserService userService, IUnitOfWork unitOfWork)
         {
-            _leaveAllocationRepository = leaveAllocationRepository;
             _mapper = mapper;
-            _leaveTypeRepository = leaveTypeRepository;
             _userService = userService;
+            _unitOfWork = unitOfWork;
         }
         public async Task<BaseCommandResponse> Handle(CreateLeaveAllocationCommandRequest request, CancellationToken cancellationToken)
         {
             BaseCommandResponse response = new();
-            var createvalitor = new CreateLeaveAllocationDtoValidation(_leaveTypeRepository);
+            var createvalitor = new CreateLeaveAllocationDtoValidation(_unitOfWork.LeaveTypeRepository);
             var validation = await createvalitor.ValidateAsync(request.LeaveAllocationDto);
             if(validation.IsValid == false)
             {
@@ -36,13 +35,13 @@ namespace HR.LeaveManagment.Application.Features.LeaveAllocation.Handlers.Comman
                 response.Message = "Validation failed";
                 response.Errors = validation.Errors.Select(x => x.ErrorMessage).ToList();
             }
-            LeaveType leaveType = await _leaveTypeRepository.Get(request.LeaveAllocationDto.LeaveTypeId);
+            LeaveType leaveType = await _unitOfWork.LeaveTypeRepository.Get(request.LeaveAllocationDto.LeaveTypeId);
             List<Employee> employees = await _userService.GetEmployees();
             int period = DateTime.Now.Year;
             List<HR.LeaveManagment.Domain.LeaveAllocation> leaveAllocations = new List<Domain.LeaveAllocation>();
             foreach (var employee in employees)
             {
-                if (await _leaveAllocationRepository.AllocationExists(employee.Id, leaveType.Id, period))
+                if (await _unitOfWork.LeaveAllocationRepository.AllocationExists(employee.Id, leaveType.Id, period))
                     continue;
                 leaveAllocations.Add(new Domain.LeaveAllocation
                 {
@@ -52,7 +51,8 @@ namespace HR.LeaveManagment.Application.Features.LeaveAllocation.Handlers.Comman
                     Period = period,
                 });
             }
-            await _leaveAllocationRepository.AddAllocation(leaveAllocations);
+            await _unitOfWork.LeaveAllocationRepository.AddAllocation(leaveAllocations);
+            await _unitOfWork.Save();
 
             response.Success = true;
             response.Message = "Created sucessfully";

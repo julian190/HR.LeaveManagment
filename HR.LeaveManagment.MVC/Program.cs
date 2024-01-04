@@ -21,6 +21,7 @@ builder.Services.AddTransient<IAuthenticationService,AuthenticationService>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<ILeaveTypeService, LeaveTypeService>();
 builder.Services.AddScoped<ILeaveAllocationService,LeaveAllocationService>();
+builder.Services.AddScoped<ILeaveRequestService,LeaveRequestService>();
 builder.Services.AddSingleton<ILocalStorageServices, LocalStorageService>();  
 var app = builder.Build();
 

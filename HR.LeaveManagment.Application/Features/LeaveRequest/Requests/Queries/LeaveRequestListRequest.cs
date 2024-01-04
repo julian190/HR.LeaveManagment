@@ -10,5 +10,6 @@ namespace HR.LeaveManagment.Application.Features.LeaveRequest.Requests.Queries
 {
     public class LeaveRequestListRequest:IRequest<List<LeaveRequestDto>>
     {
+        public bool IsLoggedInUser {  get; set; }
     }
 }

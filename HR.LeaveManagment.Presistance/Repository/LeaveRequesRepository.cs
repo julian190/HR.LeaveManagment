@@ -21,7 +21,7 @@ namespace HR.LeaveManagment.Presistance.Repository
         {
             leaveRequest.Approved = ApprovalStatus;
             _context.Entry(leaveRequest).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            await _context.SaveChangesAsync();
+           // await _context.SaveChangesAsync();
         }
 
         public async Task<List<LeaveRequest>> GetLeaveRequestsWithDetails()
@@ -32,12 +32,24 @@ namespace HR.LeaveManagment.Presistance.Repository
             return LeaveRequests;
         }
 
+        public async Task<List<LeaveRequest>> GetLeaveRequestsWithDetails(string id)
+        {
+            var leaverequests = await _context.leaveRequests
+                .Where(u=>u.RequestingEmployeeId == id).Include(q=>q.LeaveType).ToListAsync();
+            return leaverequests;
+        }
+
         public async Task<LeaveRequest> GetLeaveRequestWithDetails(int Id)
         {
             var leaverequest = await _context.leaveRequests
                 .Include(q=>q.LeaveType)
                 .FirstOrDefaultAsync(q=>q.Id == Id);
             return leaverequest;
+        }
+
+        public Task<LeaveRequest> GetLeaveRequestWithDetails(string Id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using HR.LeaveManagment.Application.DTOs.Common;
 using HR.LeaveManagment.Application.DTOs.LeaveType;
+using HR.LeaveManagment.Application.Models.Identity;
 using HR.LeaveManagment.Domain;
 using System;
 using System.Collections.Generic;
@@ -21,5 +22,7 @@ namespace HR.LeaveManagment.Application.DTOs.LeaveRequest
         public bool? Approved { get; set; }
         public bool Cancelled { get; set; }
         public string RequestingEmployeeId { get; set; }
+        public Employee Employee { get; set; }
+
     }
 }

@@ -9,13 +9,16 @@ namespace HR.LeaveManagment.Application.Features.LeaveTypes.Handlers.Commands
 {
     public class UpdateLeaveTypeCommandHandler : IRequestHandler<UpdateLeaveTypeCommand, int>
     {
-        private readonly ILeaveTypeRepository _leaveTypeRepository;
-        private readonly IMapper _mapper;
+        //private readonly ILeaveTypeRepository _leaveTypeRepository;
 
-        public UpdateLeaveTypeCommandHandler(ILeaveTypeRepository leaveTypeRepository , IMapper mapper)
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public UpdateLeaveTypeCommandHandler(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            _leaveTypeRepository = leaveTypeRepository;
+            //_leaveTypeRepository = leaveTypeRepository;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
         public async Task<int> Handle(UpdateLeaveTypeCommand request, CancellationToken cancellationToken)
         {
@@ -25,9 +28,10 @@ namespace HR.LeaveManagment.Application.Features.LeaveTypes.Handlers.Commands
             {
                 throw new ValidationException(validateRquest);
             }
-            var leavetype = await _leaveTypeRepository.Get(request.leaveTypeDto.Id);
+            var leavetype = await _unitOfWork.LeaveTypeRepository.Get(request.leaveTypeDto.Id);
             _mapper.Map(request.leaveTypeDto, leavetype);
-            await _leaveTypeRepository.Update(leavetype);
+            await _unitOfWork.LeaveTypeRepository.Update(leavetype);
+            await _unitOfWork.Save();
             return 1;
 
         }

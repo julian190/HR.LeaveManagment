@@ -1,6 +1,7 @@
 ﻿using HR.LeaveManagment.Application.DTOs.LeaveRequest;
 using HR.LeaveManagment.Application.Features.LeaveRequest.Requests.Commands;
 using HR.LeaveManagment.Application.Features.LeaveRequest.Requests.Queries;
+using HR.LeaveManagment.Application.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,9 +21,9 @@ namespace HR.LeaveManagment.Api.Controllers
         }
         // GET: api/<LeaveRequestController>
         [HttpGet]
-        public async Task<ActionResult<List<LeaveRequestDto>>> Get()
+        public async Task<ActionResult<List<LeaveRequestDto>>> Get(bool isLoggedInUser = false)
         {
-            var result = await _mediator.Send(new LeaveRequestListRequest());
+            var result = await _mediator.Send(new LeaveRequestListRequest() { IsLoggedInUser = isLoggedInUser});
             return Ok(result);
         }
 
@@ -37,7 +38,7 @@ namespace HR.LeaveManagment.Api.Controllers
 
         // POST api/<LeaveRequestController>
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] CreateLeaveRequestDto LeaveRequest)
+        public async Task<ActionResult<BaseCommandResponse>> Post([FromBody] CreateLeaveRequestDto LeaveRequest)
         {
             var result = await _mediator.Send(new CreateLeaveRequestCommand { LeaveRequestDto = LeaveRequest });
             return Ok(result);
@@ -60,6 +61,7 @@ namespace HR.LeaveManagment.Api.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            throw new NotImplementedException();
         }
     }
 }
