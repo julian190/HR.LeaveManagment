@@ -1,4 +1,5 @@
 using Hanssens.Net;
+using HR.LeaveManagement.MVC.Middleware;
 using HR.LeaveManagment.MVC.Contracts;
 using HR.LeaveManagment.MVC.Services;
 using HR.LeaveManagment.MVC.Services.Base;
@@ -38,7 +39,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
-
+app.UseMiddleware<RequestMiddleware>();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HR.LeaveManagement.Application.UnitTests.Mocks;
 using HR.LeaveManagment.Application.Contracts.Presistance;
 using HR.LeaveManagment.Application.DTOs.LeaveType;
 using HR.LeaveManagment.Application.Features.LeaveTypes.Handlers.Commands;
@@ -19,7 +20,7 @@ namespace HR.LeaveManagment.Application.UnitTests.LeaveTypes
     public class CreateLeaveTypeCommandHandlerTests
     {   
         private readonly IMapper _mapper;
-        private readonly Mock <ILeaveTypeRepository> _repository;
+        private readonly Mock <IUnitOfWork> _mockUow;
         private readonly CreateLeaveTypeDto _createLeaveTypeDto;
         private readonly CreateLeaveTypeCommandtHandler _handler;
 
@@ -28,13 +29,13 @@ namespace HR.LeaveManagment.Application.UnitTests.LeaveTypes
 
         public CreateLeaveTypeCommandHandlerTests()
         {
-            _repository = MockLeaveTypeRepository.GetLeaveTypeRepository();
+            _mockUow = MockUnitOfWork.GetUnitOfWork();
             var MapperConfig = new MapperConfiguration(c =>
             {
                 c.AddProfile<MappingProfile>();
             });
             _mapper = MapperConfig.CreateMapper();
-            _handler = new CreateLeaveTypeCommandtHandler(_repository.Object,_mapper);
+            _handler = new CreateLeaveTypeCommandtHandler(_mapper, _mockUow.Object);
             _createLeaveTypeDto = new CreateLeaveTypeDto() { 
             DefaultDays = 15,
             Name  = "Test DTO"
@@ -44,7 +45,7 @@ namespace HR.LeaveManagment.Application.UnitTests.LeaveTypes
         public async Task Valid_LeaveType_Added()
         {
             var result = await _handler.Handle(new Features.LeaveTypes.Requests.Commands.CreateLeaveTypeCommand() { LeaveTypeDto = _createLeaveTypeDto },CancellationToken.None);
-            var leavetypes = await _repository.Object.GetAll();
+            var leavetypes = await _mockUow.Object.LeaveTypeRepository.GetAll();
             result.ShouldBeOfType<BaseCommandResponse>();
             leavetypes.Count().ShouldBe(4);
         }
@@ -53,7 +54,7 @@ namespace HR.LeaveManagment.Application.UnitTests.LeaveTypes
         {
             _createLeaveTypeDto.DefaultDays = -1;
             var Result = await _handler.Handle(new Features.LeaveTypes.Requests.Commands.CreateLeaveTypeCommand() { LeaveTypeDto = _createLeaveTypeDto },CancellationToken.None);
-            var leaveTypes = await _repository.Object.GetAll();
+            var leaveTypes = await _mockUow.Object.LeaveTypeRepository.GetAll();
             leaveTypes.Count().ShouldBe(3);
             Result.ShouldBeOfType<BaseCommandResponse>();
         }

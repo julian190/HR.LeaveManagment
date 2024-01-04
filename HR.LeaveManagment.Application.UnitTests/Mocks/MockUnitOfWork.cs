@@ -1,5 +1,6 @@
 ﻿//using HR.LeaveManagement.Application.Contracts.Persistence;
 using HR.LeaveManagment.Application.Contracts.Presistance;
+using HR.LeaveManagment.Application.UnitTests.Mocks;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -11,12 +12,12 @@ namespace HR.LeaveManagement.Application.UnitTests.Mocks
 {
     public static class MockUnitOfWork
     {
-        public static Mock<ILeaveTypeRepository> GetUnitOfWork()
+        public static Mock<IUnitOfWork> GetUnitOfWork()
         {
-            var mockUow = new Mock<ILeaveTypeRepository>();
-          //  var mockLeaveTypeRepo = MockLeaveTypeRepository.GetLeaveTypeRepository();
+            var mockUow = new Mock<IUnitOfWork>();
+            var mockLeaveTypeRepo = MockLeaveTypeRepository.GetLeaveTypeRepository();
 
-           // mockUow.Setup(r => r.LeaveTypeRepository).Returns(mockLeaveTypeRepo.Object);
+           mockUow.Setup(r => r.LeaveTypeRepository).Returns(mockLeaveTypeRepo.Object);
 
             return mockUow;
         }
